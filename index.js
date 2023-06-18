@@ -7,17 +7,29 @@ const routes = require('./Route/route')
 const userRoutes = require('./Route/userRoutes')
 const app = express()
 
-app.use(cookieParser())
+
 //Middleware
 app.use(express.json());
-app.use(cors({ credentials: true }))
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}))
+app.use(cookieParser())
+
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
 
 
 
 //DB connection
 db();
 
-const port = 4000 || 8000
+const port = process.env.port || 8000
 
 
 app.get('/', (req, res) => {

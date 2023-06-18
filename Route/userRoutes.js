@@ -15,7 +15,7 @@ const routes = express.Router();
 routes.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(email, password)
+
         //Email verify
         const existingUser = await User.findOne({ email: email });
         if (!existingUser) {
@@ -24,7 +24,7 @@ routes.post('/login', async (req, res) => {
         //Password verify
         const verifyPassword = await bcrypt.compare(password, existingUser.hashPassword);
         if (verifyPassword) {
-            const token = await jwt.sign({ email: existingUser.email }, "ABCD")
+            const token = await jwt.sign({ email: existingUser.email }, process.env.SCERET_KEY)
             res.cookie('accessToken', token, { expire: new Date() + 86400000 });
             return res.status(200).send({ message: 'User signed-in successfully.', token, redirectUrl: '/textArea' });
         }
@@ -42,7 +42,7 @@ routes.post('/login', async (req, res) => {
 routes.post('/Signup', async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        console.log(email);
+
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
             return res.status(400).send({ message: "User Already Exists" })
@@ -69,7 +69,7 @@ routes.post('/Signup', async (req, res) => {
 
 routes.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
-    console.log(email);
+
     try {
         const user = await User.findOne({ email: email });
 
@@ -87,13 +87,13 @@ routes.post('/forgot-password', async (req, res) => {
             // Configure your email provider settings
             service: 'gmail',
             auth: {
-                user: '9003490676raj@gmail.com',
-                pass: 'rfboqyylcvqxhriz'
+                user: process.env.user,
+                pass: process.env.pass
             }
         });
 
         const mailOptions = {
-            from: '9003490676raj@gmail.com',
+            from: process.env.user,
             to: user.email,
             subject: 'Password Reset',
             text: `Click the following link to reset your password:${process.env.API_URL}/Reset-password/${resetToken}`,
@@ -120,8 +120,7 @@ routes.post('/forgot-password', async (req, res) => {
 routes.post('/Reset-password/:resetToken', async (req, res) => {
     const { resetToken } = req.params;
     const { newPassword } = req.body;
-    console.log(resetToken);
-    console.log(newPassword);
+
     try {
         const user = await User.findOne({
             resetToken: resetToken,

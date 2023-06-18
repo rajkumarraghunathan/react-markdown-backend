@@ -12,7 +12,7 @@ const routes = express.Router();
 routes.post('/content', isAuth, async (req, res) => {
     try {
         const { content } = req.body;
-        console.log(content);
+        // console.log(content);
         if (!content) {
             return res.status(400).send({ message: "No Content" })
         }
@@ -38,11 +38,10 @@ routes.post('/content', isAuth, async (req, res) => {
 
 routes.get('/getContent', isAuth, async (req, res) => {
     try {
-        // 
-        // userEmail: req.user.email
-        await Content.find({ token: req.user.token }).then(content => {
-            console.log(content);
-            console.log(content.map(data => data.userEmail == req.user.email));
+        console.log(req.user.email);
+        await Content.find({ userEmail: req.user.email }).then(content => {
+
+            // console.log(content.map(data => data.userEmail == req.user.email));
             if (!content) {
                 return res.status(404).send({ message: 'No content found' })
             }
