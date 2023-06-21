@@ -40,8 +40,6 @@ routes.get('/getContent', isAuth, async (req, res) => {
     try {
         console.log(req.user.email);
         await Content.find({ userEmail: req.user.email }).then(content => {
-
-            // console.log(content.map(data => data.userEmail == req.user.email));
             if (!content) {
                 return res.status(404).send({ message: 'No content found' })
             }
