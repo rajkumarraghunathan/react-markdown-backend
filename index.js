@@ -11,9 +11,9 @@ const app = express()
 //Middleware
 app.use(express.json());
 app.use(cors({
-    origin: ['http://localhost:3000', "my-cyclic-domain"],
+    origin: 'http://localhost:3000',
     credentials: true,
-
+    secure: false
 }))
 app.use(cookieParser())
 
@@ -26,7 +26,6 @@ app.use((req, res, next) => {
 });
 
 
-app.set("trust proxy", 1);
 
 //DB connection
 db();
