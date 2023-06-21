@@ -16,5 +16,5 @@ exports.isAuth = async (req, res, next) => {
 
         return next();
     }
-    res.status(401).send({ messsage: "Not Authorize" })
+    res.status(401).send({ messsage: "Not Authorize,No accessToken" })
 }
