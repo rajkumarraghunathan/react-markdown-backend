@@ -10,11 +10,12 @@ const app = express()
 
 //Middleware
 app.use(express.json());
+app.use(cookieParser())
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
 }))
-app.use(cookieParser())
+
 
 
 app.use((req, res, next) => {
